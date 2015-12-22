@@ -35,7 +35,9 @@
     "istanbul": "^0.4.1",
     "jsdoc-to-markdown": "^1.1.1",
     "mocha": "~2.3.0",
-    "mocha-lcov-reporter": "^1.0.0",
+    "mocha-lcov-reporter": "^1.0.0"
+  },
+  "dependencies": {
     "yerror": "^1.0.1"
   }
 }
