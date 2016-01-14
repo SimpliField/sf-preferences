@@ -2,7 +2,11 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-var YError = require('yerror');
+var _yerror = require('yerror');
+
+var _yerror2 = _interopRequireDefault(_yerror);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Preferences = {
   query: preferencesQuery,
@@ -14,10 +18,6 @@ var Preferences = {
  * @module sf-preferences
  */
 module.exports = Preferences;
-
-var double = function double(x) {
-  return x * 2;
-};
 
 /**
  * Query several preferences sets for a given name
@@ -31,10 +31,10 @@ function preferencesQuery(name, fallbackValue) {
   var value = null;
 
   if ('string' !== typeof name || '' === name) {
-    throw new YError('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
+    throw new _yerror2.default('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
   }
-  value = [].slice.call(arguments, 2).reduce(function (value, preferences) {
-    return 'undefined' !== typeof value ? value : preferences ? Preferences.get(preferences, name) : value;
+  value = [].slice.call(arguments, 2).reduce(function (val, preferences) {
+    return 'undefined' !== typeof val ? val : preferences ? Preferences.get(preferences, name) : val;
   }, {}.undef);
   return 'undefined' !== typeof value ? value : fallbackValue;
 }
@@ -48,14 +48,11 @@ function preferencesQuery(name, fallbackValue) {
  */
 function preferencesGet(preferences, name) {
   if ('string' !== typeof name || '' === name) {
-    throw new YError('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
+    throw new _yerror2.default('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
   }
-  return preferences.reduce(function (value, preference) {
-    if (preference.name === name) {
-      return preference.value;
-    }
-    return value;
-  }, {}.undef);
+  return preferences.find(function (prefname) {
+    return preferences.name === prefname;
+  }).value;
 }
 
 /**
@@ -70,10 +67,10 @@ function preferencesSet(preferences, name, value) {
   var keyNotFound = true;
 
   if ('string' !== typeof name || '' === name) {
-    throw new YError('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
+    throw new _yerror2.default('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
   }
   if ('undefined' === typeof value) {
-    throw new YError('E_BAD_PREF_VALUE', value, typeof value === 'undefined' ? 'undefined' : _typeof(value));
+    throw new _yerror2.default('E_BAD_PREF_VALUE', value, typeof value === 'undefined' ? 'undefined' : _typeof(value));
   }
   preferences.forEach(function (preference) {
     if (preference.name === name) {
@@ -82,10 +79,7 @@ function preferencesSet(preferences, name, value) {
     }
   });
   if (keyNotFound) {
-    preferences.push({
-      name: name,
-      value: value
-    });
+    preferences.push({ name: name, value: value });
   }
   return preferences;
 }
