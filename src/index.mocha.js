@@ -25,8 +25,11 @@ describe('Preferences', () => {
   ];
 
   describe('.query(name, fallbackValue)', () => {
-    describe('should fail', () =>
-      it('with no pref name', () => throws(query))
+    describe('should fail', () => {
+      it('with no pref name', () => throws(query, /E_BAD_PREF_NAME/));
+
+      it('with empty string pref name', () => throws(() => query(''), /E_BAD_PREF_NAME/));
+    }
     );
 
     describe('should work', () => {

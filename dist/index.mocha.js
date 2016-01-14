@@ -17,8 +17,14 @@ describe('Preferences', function () {
 
   describe('.query(name, fallbackValue)', function () {
     describe('should fail', function () {
-      return it('with no pref name', function () {
-        return (0, _assert.throws)(_index.query);
+      it('with no pref name', function () {
+        return (0, _assert.throws)(_index.query, /E_BAD_PREF_NAME/);
+      });
+
+      it('with empty string pref name', function () {
+        return (0, _assert.throws)(function () {
+          return (0, _index.query)('');
+        }, /E_BAD_PREF_NAME/);
       });
     });
 
