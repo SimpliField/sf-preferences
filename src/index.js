@@ -71,7 +71,7 @@ function preferencesSet(preferences, name, value) {
     }
   });
   if(keyNotFound) {
-    preferences.push({ name: name, value: value });
+    preferences.push({ name, value });
   }
   return preferences;
 }

@@ -22,6 +22,7 @@
     modules: true,
     arrowFunctions: true,
     blockBindings: true,
-    restParams: true
+    restParams: true,
+    objectLiteralShorthandProperties: true
   }
 }

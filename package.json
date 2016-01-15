@@ -14,7 +14,7 @@
     "cover": "istanbul cover --report html _mocha -- --compilers js:babel-register src/*.mocha.js -R spec -t 5000"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.2.0"
   },
   "repository": {
     "type": "git",
