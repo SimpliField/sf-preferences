@@ -6,6 +6,8 @@ var _assert = require('assert');
 
 var _index = require('./index');
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 describe('Preferences', function () {
   var fakeData = [{
     preferences: [{ name: 'plip', value: '1.1 plip value' }, { name: 'plap', value: '1.2 plap value' }]
@@ -49,21 +51,21 @@ describe('Preferences', function () {
         var data = ['plup', 'fallback value'].concat(fakeData.map(function (obj) {
           return obj.preferences;
         }));
-        (0, _assert.equal)(_index.query.apply(null, data), 'fallback value');
+        (0, _assert.equal)(_index.query.apply(undefined, _toConsumableArray(data)), 'fallback value');
       });
 
       it('with several objects and a match for the first', function () {
         var data = ['plip', 'fallback value'].concat(fakeData.map(function (obj) {
           return obj.preferences;
         }));
-        (0, _assert.equal)(_index.query.apply(null, data), '1.1 plip value');
+        (0, _assert.equal)(_index.query.apply(undefined, _toConsumableArray(data)), '1.1 plip value');
       });
 
       it('with several objects and a match for the second', function () {
         var data = ['plop', 'fallback value'].concat(fakeData.map(function (obj) {
           return obj.preferences;
         }));
-        (0, _assert.equal)(_index.query.apply(null, data), '2.2 plop value');
+        (0, _assert.equal)(_index.query.apply(undefined, _toConsumableArray(data)), '2.2 plop value');
       });
     });
   });

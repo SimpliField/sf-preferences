@@ -33,8 +33,13 @@ function preferencesQuery(name, fallbackValue) {
   if ('string' !== typeof name || '' === name) {
     throw new _yerror2.default('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
   }
-  value = [].slice.call(arguments, 2).reduce(function (val, preferences) {
-    return 'undefined' !== typeof val ? val : preferences ? Preferences.get(preferences, name) : val;
+
+  for (var _len = arguments.length, preferences = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    preferences[_key - 2] = arguments[_key];
+  }
+
+  value = preferences.reduce(function (val, prefs) {
+    return 'undefined' !== typeof val ? val : prefs ? Preferences.get(prefs, name) : val;
   }, {}.undef);
   return 'undefined' !== typeof value ? value : fallbackValue;
 }
@@ -50,9 +55,10 @@ function preferencesGet(preferences, name) {
   if ('string' !== typeof name || '' === name) {
     throw new _yerror2.default('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
   }
-  return preferences.find(function (prefname) {
-    return preferences.name === prefname;
-  }).value;
+  var res = preferences.find(function (pref) {
+    return pref.name === name;
+  });
+  return 'undefined' !== typeof res ? res.value : {}.undef;
 }
 
 /**

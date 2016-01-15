@@ -46,21 +46,18 @@ describe('Preferences', () => {
       );
 
       it('with several objects and no match', () => {
-        const data = ['plup', 'fallback value']
-          .concat(fakeData.map((obj) => obj.preferences));
-        equal(query.apply(null, data), 'fallback value');
+        const data = ['plup', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        equal(query(...data), 'fallback value');
       });
 
       it('with several objects and a match for the first', () => {
-        const data = ['plip', 'fallback value']
-          .concat(fakeData.map((obj) => obj.preferences));
-        equal(query.apply(null, data), '1.1 plip value');
+        const data = ['plip', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        equal(query(...data), '1.1 plip value');
       });
 
       it('with several objects and a match for the second', () => {
-        const data = ['plop', 'fallback value']
-          .concat(fakeData.map((obj) => obj.preferences));
-        equal(query.apply(null, data), '2.2 plop value');
+        const data = ['plop', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        equal(query(...data), '2.2 plop value');
       });
     });
   });

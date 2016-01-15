@@ -21,6 +21,7 @@
   ecmaFeatures: {
     modules: true,
     arrowFunctions: true,
-    blockBindings: true
+    blockBindings: true,
+    restParams: true
   }
 }

@@ -19,17 +19,16 @@ module.exports = Preferences;
  * @param {...Array} preferences The preferences set in wich to look for
  * @return {String|Boolean|Number} The resolved value
  */
-function preferencesQuery(name, fallbackValue) {
+function preferencesQuery(name, fallbackValue, ...preferences) {
   let value = null;
 
   if('string' !== typeof name || '' === name) {
     throw new YError('E_BAD_PREF_NAME', name, typeof name);
   }
-  value = ([].slice.call(arguments, 2)).reduce(
-    (val, preferences) => 'undefined' !== typeof val ? val :
-      preferences ? Preferences.get(preferences, name) : val,
-    {}.undef
-  );
+  value = preferences.reduce(
+    (val, prefs) => 'undefined' !== typeof val ? val :
+      prefs ? Preferences.get(prefs, name) : val,
+    {}.undef);
   return 'undefined' !== typeof value ? value : fallbackValue;
 }
 
