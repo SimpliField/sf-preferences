@@ -20,16 +20,9 @@ module.exports = Preferences;
  * @return {String|Boolean|Number} The resolved value
  */
 function preferencesQuery(name, fallbackValue, ...preferences) {
-  let value = null;
-
-  if('string' !== typeof name || '' === name) {
-    throw new YError('E_BAD_PREF_NAME', name, typeof name);
-  }
-  value = preferences.reduce(
-    (val, prefs) => 'undefined' !== typeof val ? val :
-      prefs ? Preferences.get(prefs, name) : val,
-    {}.undef);
-  return 'undefined' !== typeof value ? value : fallbackValue;
+  throwStringDataError(name);
+  const value = preferences.reduce(getPreference(name), {}.undef);
+  return isDefined(value) ? value : fallbackValue;
 }
 
 /**
@@ -40,11 +33,9 @@ function preferencesQuery(name, fallbackValue, ...preferences) {
  * @return {String|Boolean|Number} The value to set to.
  */
 function preferencesGet(preferences, name) {
-  if('string' !== typeof name || '' === name) {
-    throw new YError('E_BAD_PREF_NAME', name, typeof name);
-  }
-  const res = preferences.find((pref) => pref.name === name);
-  return 'undefined' !== typeof res ? res.value : {}.undef;
+  throwStringDataError(name);
+  const res = findDataByName(name, preferences);
+  return isDefined(res) ? res.value : {}.undef;
 }
 
 /**
@@ -56,22 +47,39 @@ function preferencesGet(preferences, name) {
  * @return {Array} The modified preferences set
  */
 function preferencesSet(preferences, name, value) {
-  var keyNotFound = true;
-
-  if('string' !== typeof name || '' === name) {
-    throw new YError('E_BAD_PREF_NAME', name, typeof name);
-  }
-  if('undefined' === typeof value) {
-    throw new YError('E_BAD_PREF_VALUE', value, typeof value);
-  }
-  preferences.forEach((preference) => {
-    if(preference.name === name) {
-      preference.value = value;
-      keyNotFound = false;
-    }
-  });
-  if(keyNotFound) {
+  throwStringDataError(name);
+  throwDefinedDataError(value);
+  if(!isDefined(findDataByName(name, preferences))) {
     preferences.push({ name, value });
+  } else {
+    preferences = preferences.map(setValue(name, value));
   }
   return preferences;
+}
+
+
+const getPreference = (name) => (val, prefs) => {
+  return isDefined(val) ?
+    val : prefs ?
+      Preferences.get(prefs, name) : val;
+}
+const setValue = (name, value) => (preference) => {
+  if(preference.name === name) {
+    preference.value = value;
+  }
+  return preference;
+}
+
+const findDataByName = (name, datas) => datas.find(data => data.name === name);
+const isDefined = value => 'undefined' !== typeof value;
+const isString  = value => 'string' === typeof value;
+const throwStringDataError = data => {
+  if(!isString(data) || '' === data) {
+    throw new YError('E_BAD_PREF_NAME', data, typeof data);
+  };
+}
+const throwDefinedDataError = data => {
+  if(!isDefined(data)) {
+    throw new YError('E_BAD_PREF_VALUE', data, typeof data);
+  };
 }
