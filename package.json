@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register src/*.mocha.js",
-    "compile": "babel src --out-dir=dist",
+    "compile": "babel src/*.js --out-file=dist/index.js",
     "cli": "env NPM_RUN_CLI=1",
     "lint": "eslint index.js index.mocha.js",
     "preversion": "npm run compile && npm run lint && npm test",
