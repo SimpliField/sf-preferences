@@ -17,5 +17,12 @@
   },
   "rules": {
     "strict": [2, "global"]
+  },
+  ecmaFeatures: {
+    modules: true,
+    arrowFunctions: true,
+    blockBindings: true,
+    restParams: true,
+    objectLiteralShorthandProperties: true
   }
 }

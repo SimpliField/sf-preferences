@@ -1,189 +1,108 @@
 /* eslint max-nested-callbacks:0 */
 
-'use strict';
+import { equal, throws, deepEqual } from 'assert';
+import { get, set, query } from './index';
 
-var assert = require('assert');
-var Preferences = require('./index');
+describe('Preferences', () => {
+  var fakeData = [
+    {
+      preferences: [
+        { name: 'plip', value: '1.1 plip value' },
+        { name: 'plap', value: '1.2 plap value' },
+      ],
+    },
+    {
+      preferences: [
+        { name: 'plip', value: '2.1 plip value' },
+        { name: 'plop', value: '2.2 plop value' },
+      ],
+    },
+    {
+      preferences: [
+        { name: 'foo', value: '3.1 foo value' },
+      ],
+    },
+  ];
 
-describe('Preferences', function() {
-  var objects = [{
-    preferences: [{
-      name: 'plip',
-      value: '1.1 plip value',
-    }, {
-      name: 'plap',
-      value: '1.2 plap value',
-    }],
-  }, {
-    preferences: [{
-      name: 'plip',
-      value: '2.1 plip value',
-    }, {
-      name: 'plop',
-      value: '2.2 plop value',
-    }],
-  }, {
-    preferences: [{
-      name: 'foo',
-      value: '3.1 foo value',
-    }],
-  }];
+  describe('.query(name, fallbackValue)', () => {
+    describe('should fail', () => {
+      it('with no pref name', () => throws(query, /E_BAD_PREF_NAME/));
 
-  describe('.query()', function() {
+      it('with empty string pref name', () => throws(() => query(''), /E_BAD_PREF_NAME/));
+    }
+    );
 
-    describe('should fail', function() {
+    describe('should work', () => {
+      it('with no object and no fallback', () => equal(typeof query('plop'), 'undefined'));
 
-      it('with no pref name', function() {
-        assert.throws(Preferences.query);
+      it('with no object', () => equal(query('plop', 'fallback value'), 'fallback value'));
+
+      it('with one object but no match', () =>
+        equal(query('plop', 'fallback value', fakeData[0].preferences), 'fallback value')
+      );
+
+      it('with one object and a match', () =>
+        equal(query('plip', 'fallback value', fakeData[0].preferences), '1.1 plip value')
+      );
+
+      it('with several objects and no match', () => {
+        const data = ['plup', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        equal(query(...data), 'fallback value');
       });
 
+      it('with several objects and a match for the first', () => {
+        const data = ['plip', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        equal(query(...data), '1.1 plip value');
+      });
+
+      it('with several objects and a match for the second', () => {
+        const data = ['plop', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        equal(query(...data), '2.2 plop value');
+      });
     });
-
-    describe('should work', function() {
-
-      it('with no object and no fallback', function() {
-        assert.equal(typeof Preferences.query('plop'), 'undefined');
-      });
-
-      it('with no object', function() {
-        assert.equal(Preferences.query('plop', 'fallback value'), 'fallback value');
-      });
-
-      it('with one object but no match', function() {
-        assert.equal(
-          Preferences.query('plop', 'fallback value', objects[0].preferences),
-          'fallback value'
-        );
-      });
-
-      it('with one object and a match', function() {
-        assert.equal(
-          Preferences.query('plip', 'fallback value', objects[0].preferences),
-          '1.1 plip value'
-        );
-      });
-
-      it('with several objects and no match', function() {
-        assert.equal(
-          Preferences.query.apply(
-            null,
-            ['plup', 'fallback value'].concat(objects.map(function(obj) {
-              return obj.preferences;
-            }))
-          ),
-          'fallback value'
-        );
-      });
-
-      it('with several objects and a match for the first', function() {
-        assert.equal(
-          Preferences.query.apply(
-            null,
-            ['plip', 'fallback value'].concat(objects.map(function(obj) {
-              return obj.preferences;
-            }))
-          ),
-          '1.1 plip value'
-        );
-      });
-
-      it('with several objects and a match for the second', function() {
-        assert.equal(
-          Preferences.query.apply(
-            null,
-            ['plop', 'fallback value'].concat(objects.map(function(obj) {
-              return obj.preferences;
-            }))
-          ),
-          '2.2 plop value'
-        );
-      });
-
-    });
-
   });
 
-  describe('.get()', function() {
+  describe('.get(preferences, name)', () => {
+    describe('should fail', () => {
+      it('with no preferences', () => throws(get, /E_BAD_PREF_NAME/));
 
-    describe('should fail', function() {
-
-      it('with no preferences', function() {
-        assert.throws(function() {
-          Preferences.get();
-        });
-      });
-
-      it('with no preference name', function() {
-        assert.throws(function() {
-          Preferences.get([]);
-        });
-      });
-
+      it('with no preference name', () => throws(() => get([]), /E_BAD_PREF_NAME/));
     });
 
-    describe('should work', function() {
+    describe('should work', () => {
+      it('with preferences containing the preference name', () =>
+        equal(get(fakeData[0].preferences, 'plip'), '1.1 plip value')
+      );
 
-      it('with preferences containing the preference name', function() {
-        assert.equal(Preferences.get(objects[0].preferences, 'plip'), '1.1 plip value');
-      });
-
-      it('with preferences not containing the preference name', function() {
-        assert.equal(typeof Preferences.get(objects[0].preferences, 'plop'), 'undefined');
-      });
-
+      it('with preferences not containing the preference name', () =>
+        equal(typeof get(fakeData[0].preferences, 'plop'), 'undefined')
+      );
     });
-
   });
 
-  describe('.set()', function() {
+  describe('.set(preferences, name, value)', () => {
+    describe('should fail', () => {
+      it('should fail with no preferences', () => throws(() => set()));
 
-    describe('should fail', function() {
+      it('should fail with no preference name', () => throws(() => set([]), /E_BAD_PREF_NAME/));
 
-      it('should fail with no preferences', function() {
-        assert.throws(function() {
-          Preferences.set();
-        });
-      });
-
-      it('should fail with no preference name', function() {
-        assert.throws(function() {
-          Preferences.set([]);
-        });
-      });
-
-      it('should fail with no value', function() {
-        assert.throws(function() {
-          Preferences.set([], 'name');
-        });
-      });
-
+      it('should fail with no value', () => throws(() => set([], 'name'), /E_BAD_PREF_VALUE/));
     });
 
-    describe('should work', function() {
+    describe('should work', () => {
+      it('should work with previously existing property', () =>
+        deepEqual(
+          set([{ name: 'plop', value: 'kikoolol' }], 'plop', 'wadup'),
+          [{ name: 'plop', value: 'wadup' }]
+        )
+      );
 
-      it('should work with previously existing property', function() {
-        assert.deepEqual(
-          Preferences.set([{
-            name: 'plop',
-            value: 'kikoolol',
-          }], 'plop', 'wadup'), [{
-            name: 'plop',
-            value: 'wadup',
-          }]
-        );
-      });
-
-      it('should work with unexisting property', function() {
-        assert.deepEqual(
-          Preferences.set([], 'plop', 'wadup'), [{
-            name: 'plop',
-            value: 'wadup',
-          }]
-        );
-      });
-
+      it('should work with unexisting property', () =>
+        deepEqual(
+          set([], 'plop', 'wadup'),
+          [{ name: 'plop', value: 'wadup' }]
+        )
+      );
     });
-
   });
-
 });

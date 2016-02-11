@@ -1,6 +1,4 @@
-'use strict';
-
-var YError = require('yerror');
+import YError from 'yerror';
 
 var Preferences = {
   query: preferencesQuery,
@@ -21,19 +19,16 @@ module.exports = Preferences;
  * @param {...Array} preferences The preferences set in wich to look for
  * @return {String|Boolean|Number} The resolved value
  */
-function preferencesQuery(name, fallbackValue) {
-  var value = null;
+function preferencesQuery(name, fallbackValue, ...preferences) {
+  let value = null;
 
   if('string' !== typeof name || '' === name) {
     throw new YError('E_BAD_PREF_NAME', name, typeof name);
   }
-  value = ([].slice.call(arguments, 2)).reduce(function(value, preferences) {
-    return 'undefined' !== typeof value ?
-      value :
-      preferences ?
-        Preferences.get(preferences, name) :
-        value;
-  }, {}.undef);
+  value = preferences.reduce(
+    (val, prefs) => 'undefined' !== typeof val ? val :
+      prefs ? Preferences.get(prefs, name) : val,
+    {}.undef);
   return 'undefined' !== typeof value ? value : fallbackValue;
 }
 
@@ -48,12 +43,8 @@ function preferencesGet(preferences, name) {
   if('string' !== typeof name || '' === name) {
     throw new YError('E_BAD_PREF_NAME', name, typeof name);
   }
-  return preferences.reduce(function(value, preference) {
-    if(preference.name === name) {
-      return preference.value;
-    }
-    return value;
-  }, {}.undef);
+  const res = preferences.find((pref) => pref.name === name);
+  return 'undefined' !== typeof res ? res.value : {}.undef;
 }
 
 /**
@@ -73,17 +64,14 @@ function preferencesSet(preferences, name, value) {
   if('undefined' === typeof value) {
     throw new YError('E_BAD_PREF_VALUE', value, typeof value);
   }
-  preferences.forEach(function(preference) {
+  preferences.forEach((preference) => {
     if(preference.name === name) {
       preference.value = value;
       keyNotFound = false;
     }
   });
   if(keyNotFound) {
-    preferences.push({
-      name: name,
-      value: value,
-    });
+    preferences.push({ name, value });
   }
   return preferences;
 }
