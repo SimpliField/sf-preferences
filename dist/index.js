@@ -55,7 +55,8 @@ function preferencesGet(preferences, name) {
   if ('string' !== typeof name || '' === name) {
     throw new _yerror2.default('E_BAD_PREF_NAME', name, typeof name === 'undefined' ? 'undefined' : _typeof(name));
   }
-  var res = preferences.find(function (pref) {
+
+  var res = preferences.filter(function (pref) {
     return pref.name === name;
   });
   return 'undefined' !== typeof res ? res.value : {}.undef;

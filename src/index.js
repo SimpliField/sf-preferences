@@ -43,7 +43,8 @@ function preferencesGet(preferences, name) {
   if('string' !== typeof name || '' === name) {
     throw new YError('E_BAD_PREF_NAME', name, typeof name);
   }
-  const res = preferences.find((pref) => pref.name === name);
+
+  const res = preferences.filter((pref) => pref.name === name)[0];
   return 'undefined' !== typeof res ? res.value : {}.undef;
 }
 
