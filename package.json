@@ -1,6 +1,6 @@
 {
   "name": "sf-preferences",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Library to easily manage SimpliField preferences.",
   "main": "dist/index.js",
   "scripts": {
