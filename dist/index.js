@@ -58,7 +58,7 @@ function preferencesGet(preferences, name) {
 
   var res = preferences.filter(function (pref) {
     return pref.name === name;
-  });
+  })[0];
   return 'undefined' !== typeof res ? res.value : {}.undef;
 }
 
