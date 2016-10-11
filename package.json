@@ -9,7 +9,7 @@
     "cli": "env NPM_RUN_CLI=1",
     "lint": "eslint index.js index.mocha.js",
     "preversion": "npm run compile && npm run lint && npm test",
-    "doc": "cat src/index.js | jsdoc2md > API.md",
+    "doc": "jsdoc2md --files src/index.js > API.md && awk '{print} /^## API$/ {exit}' README.md > build.md && awk 'NR>2' API.md >> build.md && rm API.md && mv build.md README.md",
     "coveralls": "istanbul cover _mocha --report lcovonly -- --compilers js:babel-register src/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cover": "istanbul cover --report html _mocha -- --compilers js:babel-register src/*.mocha.js -R spec -t 5000"
   },
