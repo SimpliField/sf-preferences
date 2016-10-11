@@ -8,7 +8,9 @@
 <dt><a href="#module_sf-preferences">sf-preferences</a></dt>
 <dd></dd>
 </dl>
+
 ## Functions
+
 <dl>
 <dt><a href="#query">query(name, fallbackValue, ...preferences)</a> ⇒ <code>String</code> | <code>Boolean</code> | <code>Number</code></dt>
 <dd><p>Query several preferences sets for a given name</p>
@@ -20,6 +22,7 @@
 <dd><p>Set the preference name to the given value in the given preferences set</p>
 </dd>
 </dl>
+
 <a name="module_sf-preferences"></a>
 ## sf-preferences
 <a name="query"></a>
@@ -59,3 +62,4 @@ Set the preference name to the given value in the given preferences set
 | preferences | <code>Array</code> | The preferences set to modify |
 | name | <code>String</code> | The preference name to set. |
 | value | <code>String</code> &#124; <code>Boolean</code> &#124; <code>Number</code> | The value to set to. |
+
