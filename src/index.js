@@ -22,13 +22,18 @@ module.exports = Preferences;
 function preferencesQuery(name, fallbackValue, ...preferences) {
   let value = null;
 
-  if('string' !== typeof name || '' === name) {
+  if ('string' !== typeof name || '' === name) {
     throw new YError('E_BAD_PREF_NAME', name, typeof name);
   }
   value = preferences.reduce(
-    (val, prefs) => 'undefined' !== typeof val ? val :
-      prefs ? Preferences.get(prefs, name) : val,
-    {}.undef);
+    (val, prefs) =>
+      'undefined' !== typeof val
+        ? val
+        : prefs
+          ? Preferences.get(prefs, name)
+          : val,
+    {}.undef
+  );
   return 'undefined' !== typeof value ? value : fallbackValue;
 }
 
@@ -40,11 +45,12 @@ function preferencesQuery(name, fallbackValue, ...preferences) {
  * @return {String|Boolean|Number} The value to set to.
  */
 function preferencesGet(preferences, name) {
-  if('string' !== typeof name || '' === name) {
+  if ('string' !== typeof name || '' === name) {
     throw new YError('E_BAD_PREF_NAME', name, typeof name);
   }
 
-  const res = preferences.filter((pref) => pref.name === name)[0];
+  const res = preferences.filter(pref => pref.name === name)[0];
+
   return 'undefined' !== typeof res ? res.value : {}.undef;
 }
 
@@ -59,19 +65,19 @@ function preferencesGet(preferences, name) {
 function preferencesSet(preferences, name, value) {
   var keyNotFound = true;
 
-  if('string' !== typeof name || '' === name) {
+  if ('string' !== typeof name || '' === name) {
     throw new YError('E_BAD_PREF_NAME', name, typeof name);
   }
-  if('undefined' === typeof value) {
+  if ('undefined' === typeof value) {
     throw new YError('E_BAD_PREF_VALUE', value, typeof value);
   }
-  preferences.forEach((preference) => {
-    if(preference.name === name) {
+  preferences.forEach(preference => {
+    if (preference.name === name) {
       preference.value = value;
       keyNotFound = false;
     }
   });
-  if(keyNotFound) {
+  if (keyNotFound) {
     preferences.push({ name, value });
   }
   return preferences;

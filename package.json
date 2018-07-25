@@ -7,7 +7,8 @@
     "test": "mocha --compilers js:babel-register src/*.mocha.js",
     "compile": "babel src/*.js --ignore='*.mocha.js' --out-file=dist/index.js",
     "cli": "env NPM_RUN_CLI=1",
-    "lint": "eslint index.js index.mocha.js",
+    "lint": "eslint src/*.js",
+    "prettify": "prettier --write '*.js' 'src/*.js'",
     "preversion": "npm run compile && npm run lint && npm test",
     "doc": "jsdoc2md --files src/index.js > API.md && awk '{print} /^## API$/ {exit}' README.md > build.md && awk 'NR>2' API.md >> build.md && rm API.md && mv build.md README.md",
     "coveralls": "istanbul cover _mocha --report lcovonly -- --compilers js:babel-register src/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
@@ -30,18 +31,19 @@
     "url": "https://github.com/SimpliField/sf-preferences/issues"
   },
   "devDependencies": {
-    "babel-cli": "6.22.2",
-    "babel-preset-es2015": "6.22.0",
-    "babel-register": "6.22.0",
-    "coveralls": "2.11.16",
-    "eslint": "3.15.0",
-    "eslint-config-simplifield": "4.4.0",
+    "babel-cli": "6.26.0",
+    "babel-preset-es2015": "6.24.1",
+    "babel-register": "6.26.0",
+    "coveralls": "3.0.2",
+    "eslint": "5.2.0",
+    "eslint-config-simplifield": "7.1.0",
     "istanbul": "1.1.0-alpha.1",
-    "jsdoc-to-markdown": "3.0.0",
-    "mocha": "3.2.0",
-    "mocha-lcov-reporter": "1.2.0"
+    "jsdoc-to-markdown": "4.0.1",
+    "mocha": "5.2.0",
+    "mocha-lcov-reporter": "1.3.0",
+    "prettier": "1.13.7"
   },
   "dependencies": {
-    "yerror": "1.0.2"
+    "yerror": "2.1.2"
   }
 }
