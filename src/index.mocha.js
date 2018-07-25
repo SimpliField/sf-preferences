@@ -18,9 +18,7 @@ describe('Preferences', () => {
       ],
     },
     {
-      preferences: [
-        { name: 'foo', value: '3.1 foo value' },
-      ],
+      preferences: [{ name: 'foo', value: '3.1 foo value' }],
     },
   ];
 
@@ -28,35 +26,50 @@ describe('Preferences', () => {
     describe('should fail', () => {
       it('with no pref name', () => throws(query, /E_BAD_PREF_NAME/));
 
-      it('with empty string pref name', () => throws(() => query(''), /E_BAD_PREF_NAME/));
-    }
-    );
+      it('with empty string pref name', () =>
+        throws(() => query(''), /E_BAD_PREF_NAME/));
+    });
 
     describe('should work', () => {
-      it('with no object and no fallback', () => equal(typeof query('plop'), 'undefined'));
+      it('with no object and no fallback', () =>
+        equal(typeof query('plop'), 'undefined'));
 
-      it('with no object', () => equal(query('plop', 'fallback value'), 'fallback value'));
+      it('with no object', () =>
+        equal(query('plop', 'fallback value'), 'fallback value'));
 
       it('with one object but no match', () =>
-        equal(query('plop', 'fallback value', fakeData[0].preferences), 'fallback value')
-      );
+        equal(
+          query('plop', 'fallback value', fakeData[0].preferences),
+          'fallback value'
+        ));
 
       it('with one object and a match', () =>
-        equal(query('plip', 'fallback value', fakeData[0].preferences), '1.1 plip value')
-      );
+        equal(
+          query('plip', 'fallback value', fakeData[0].preferences),
+          '1.1 plip value'
+        ));
 
       it('with several objects and no match', () => {
-        const data = ['plup', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        const data = ['plup', 'fallback value'].concat(
+          fakeData.map(obj => obj.preferences)
+        );
+
         equal(query(...data), 'fallback value');
       });
 
       it('with several objects and a match for the first', () => {
-        const data = ['plip', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        const data = ['plip', 'fallback value'].concat(
+          fakeData.map(obj => obj.preferences)
+        );
+
         equal(query(...data), '1.1 plip value');
       });
 
       it('with several objects and a match for the second', () => {
-        const data = ['plop', 'fallback value'].concat(fakeData.map((obj) => obj.preferences));
+        const data = ['plop', 'fallback value'].concat(
+          fakeData.map(obj => obj.preferences)
+        );
+
         equal(query(...data), '2.2 plop value');
       });
     });
@@ -66,17 +79,16 @@ describe('Preferences', () => {
     describe('should fail', () => {
       it('with no preferences', () => throws(get, /E_BAD_PREF_NAME/));
 
-      it('with no preference name', () => throws(() => get([]), /E_BAD_PREF_NAME/));
+      it('with no preference name', () =>
+        throws(() => get([]), /E_BAD_PREF_NAME/));
     });
 
     describe('should work', () => {
       it('with preferences containing the preference name', () =>
-        equal(get(fakeData[0].preferences, 'plip'), '1.1 plip value')
-      );
+        equal(get(fakeData[0].preferences, 'plip'), '1.1 plip value'));
 
       it('with preferences not containing the preference name', () =>
-        equal(typeof get(fakeData[0].preferences, 'plop'), 'undefined')
-      );
+        equal(typeof get(fakeData[0].preferences, 'plop'), 'undefined'));
     });
   });
 
@@ -84,25 +96,23 @@ describe('Preferences', () => {
     describe('should fail', () => {
       it('should fail with no preferences', () => throws(() => set()));
 
-      it('should fail with no preference name', () => throws(() => set([]), /E_BAD_PREF_NAME/));
+      it('should fail with no preference name', () =>
+        throws(() => set([]), /E_BAD_PREF_NAME/));
 
-      it('should fail with no value', () => throws(() => set([], 'name'), /E_BAD_PREF_VALUE/));
+      it('should fail with no value', () =>
+        throws(() => set([], 'name'), /E_BAD_PREF_VALUE/));
     });
 
     describe('should work', () => {
       it('should work with previously existing property', () =>
-        deepEqual(
-          set([{ name: 'plop', value: 'kikoolol' }], 'plop', 'wadup'),
-          [{ name: 'plop', value: 'wadup' }]
-        )
-      );
+        deepEqual(set([{ name: 'plop', value: 'kikoolol' }], 'plop', 'wadup'), [
+          { name: 'plop', value: 'wadup' },
+        ]));
 
       it('should work with unexisting property', () =>
-        deepEqual(
-          set([], 'plop', 'wadup'),
-          [{ name: 'plop', value: 'wadup' }]
-        )
-      );
+        deepEqual(set([], 'plop', 'wadup'), [
+          { name: 'plop', value: 'wadup' },
+        ]));
     });
   });
 });

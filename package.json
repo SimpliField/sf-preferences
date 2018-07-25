@@ -7,7 +7,7 @@
     "test": "mocha --compilers js:babel-register src/*.mocha.js",
     "compile": "babel src/*.js --ignore='*.mocha.js' --out-file=dist/index.js",
     "cli": "env NPM_RUN_CLI=1",
-    "lint": "eslint index.js index.mocha.js",
+    "lint": "eslint src/*.js",
     "preversion": "npm run compile && npm run lint && npm test",
     "doc": "jsdoc2md --files src/index.js > API.md && awk '{print} /^## API$/ {exit}' README.md > build.md && awk 'NR>2' API.md >> build.md && rm API.md && mv build.md README.md",
     "coveralls": "istanbul cover _mocha --report lcovonly -- --compilers js:babel-register src/*.mocha.js -R spec -t 5000 && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
@@ -39,7 +39,8 @@
     "istanbul": "1.1.0-alpha.1",
     "jsdoc-to-markdown": "4.0.1",
     "mocha": "5.2.0",
-    "mocha-lcov-reporter": "1.3.0"
+    "mocha-lcov-reporter": "1.3.0",
+    "prettier": "1.13.7"
   },
   "dependencies": {
     "yerror": "2.1.2"
